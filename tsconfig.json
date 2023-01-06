@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "strict": true,
+    "sourceMap": true,
+    "lib": ["dom", "es2015"],
+    "jsx": "react-jsx",
+    "target": "es5",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "module": "esnext",
+    "isolatedModules": true,
+    "paths": {
+      "@src/*": ["client/src/*"],
+      "@test/*": ["client/test/*"]
+    }
+  },
+  "exclude": [
+    "node_modules"
+  ],
+}
