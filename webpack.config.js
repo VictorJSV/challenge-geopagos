@@ -2,27 +2,39 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './client/src/index.tsx',
+  entry: "./client/src/index.tsx",
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    path: path.resolve(__dirname, "dist"),
+    filename: "bundle.js",
+    publicPath: "/",
   },
   resolve: {
-    extensions: ['.js', '.ts', '.tsx'],
+    extensions: [".js", ".ts", ".tsx"],
+    alias: {
+      "@src": path.resolve(__dirname, "client/src/"),
+      "@test": path.resolve(__dirname, "client/test/"),
+    },
   },
-  devtool: 'source-map',
+  devtool: "source-map",
+  devServer: {
+    historyApiFallback: true,
+  },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        loader: 'ts-loader'
-      }
-    ]
+        loader: "ts-loader",
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: "asset/resource",
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'client/public/index.html')
-    })
-  ]
-}
+      template: path.join(__dirname, "client/public/index.html"),
+    }),
+  ],
+};

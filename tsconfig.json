@@ -11,6 +11,9 @@
     "moduleResolution": "node",
     "module": "esnext",
     "isolatedModules": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
     "paths": {
       "@src/*": ["client/src/*"],
       "@test/*": ["client/test/*"]
@@ -19,4 +22,5 @@
   "exclude": [
     "node_modules"
   ],
+  "include": ["client/src"]
 }
