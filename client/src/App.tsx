@@ -7,6 +7,7 @@ import { Box, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { IntlProvider } from "react-intl";
 
 const Checkout = lazy(() => import("./pages/Checkout/Checkout"));
+const TransactionDeny = lazy(() => import("./pages/TransactionDeny/TransactionDeny"));
 
 const theme = createTheme({
   palette: {
@@ -37,6 +38,7 @@ export const App = () => {
                     ></Route>
                     <Route path="*" element={<>NOT FOUND</>} />
                     <Route path="checkout" element={<Checkout />} />
+                    <Route path="transaction-deny" element={<TransactionDeny />} />
                   </Routes>
                 </BrowserRouter>
               </Box>

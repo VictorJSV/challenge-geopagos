@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Form, Resume } from "./components";
 import { Container, Link, Typography } from "@mui/material";
 import { Lock } from "@mui/icons-material";
@@ -5,6 +6,7 @@ import { BoxPaymentMessage } from "./styled";
 import { FormValues, IPricesList } from "./interfaces";
 
 const Checkout = () => {
+  const navigate = useNavigate();
   const pricesList: IPricesList = {
     total: 24048.2,
     items: [
@@ -23,6 +25,7 @@ const Checkout = () => {
 
   const onSubmit = (data: FormValues) => {
     console.log("data", data);
+    navigate("/transaction-deny", { replace: true });
   };
 
   return (
@@ -37,7 +40,7 @@ const Checkout = () => {
           Ver tarjetas
         </Link>
       </Typography>
-      <Form onSubmit={onSubmit} total={pricesList.total}/>
+      <Form onSubmit={onSubmit} total={pricesList.total} />
       <BoxPaymentMessage>
         <Lock sx={{ mr: 1 }} />
         Todas las transacciones son seguras y encriptadas.
