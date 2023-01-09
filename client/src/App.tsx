@@ -1,13 +1,21 @@
 import { Suspense, lazy } from "react";
 import store from "./redux/store";
 import { Provider } from "react-redux";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+} from "react-router-dom";
 import { Toolbar } from "./components";
 import { Box, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { IntlProvider } from "react-intl";
 
 const Checkout = lazy(() => import("./pages/Checkout/Checkout"));
-const TransactionDeny = lazy(() => import("./pages/TransactionDeny/TransactionDeny"));
+const TransactionDeny = lazy(
+  () => import("./pages/TransactionDeny/TransactionDeny")
+);
 
 const theme = createTheme({
   palette: {
@@ -20,6 +28,20 @@ const theme = createTheme({
   },
 });
 
+const PrimaryLayout = () => (
+  <>
+    <Toolbar color="primary" />
+    <Outlet />
+  </>
+);
+
+const SecondaryLayout = () => (
+  <>
+    <Toolbar color="inherit" />
+    <Outlet />
+  </>
+);
+
 export const App = () => {
   return (
     <>
@@ -29,7 +51,6 @@ export const App = () => {
           <ThemeProvider theme={theme}>
             <Provider store={store}>
               <Box sx={{ marginTop: 12 }}>
-                <Toolbar />
                 <BrowserRouter>
                   <Routes>
                     <Route
@@ -37,8 +58,15 @@ export const App = () => {
                       element={<Navigate to="checkout" />}
                     ></Route>
                     <Route path="*" element={<>NOT FOUND</>} />
-                    <Route path="checkout" element={<Checkout />} />
-                    <Route path="transaction-deny" element={<TransactionDeny />} />
+                    <Route element={<PrimaryLayout />}>
+                      <Route path="checkout" element={<Checkout />} />
+                    </Route>
+                    <Route element={<SecondaryLayout />}>
+                      <Route
+                        path="transaction-deny"
+                        element={<TransactionDeny />}
+                      />
+                    </Route>
                   </Routes>
                 </BrowserRouter>
               </Box>

@@ -1,7 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Container, Typography } from "@mui/material";
 import { ButtonGeneric } from "@src/shared/styled";
-import icAlert from "@src/assets/ic-alert.svg";
+import IcAlert from "@src/assets/ic-alert.svg";
+import styled from "styled-components";
+
+const IconAlert = styled(IcAlert)`
+  color: #D63E49;
+  width: 54px;
+`;
 
 const TransactionDeny = () => {
   const navigate = useNavigate();
@@ -11,7 +17,7 @@ const TransactionDeny = () => {
   return (
     <Container maxWidth="sm">
       <Box textAlign="center" mb={3}>
-        <img src={icAlert} alt="alert" width={54} />
+        <IconAlert />
       </Box>
       <Typography textAlign="center" variant="h6" mb={3}>
         Transacción denegada

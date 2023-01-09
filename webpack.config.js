@@ -27,8 +27,12 @@ module.exports = {
         loader: "ts-loader",
       },
       {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        test: /\.(png|jpg|jpeg|gif)$/i,
         type: "asset/resource",
+      },
+      {
+        test: /\.svg$/,
+        use: "@svgr/webpack",
       },
     ],
   },

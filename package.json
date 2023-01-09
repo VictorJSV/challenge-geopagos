@@ -9,6 +9,7 @@
     "start:client": "webpack-dev-server --mode development --open"
   },
   "devDependencies": {
+    "@svgr/webpack": "^6.5.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@types/jest": "29.2.5",
@@ -53,6 +54,7 @@
     "react-router-dom": "^6.6.1",
     "react-text-mask": "^5.5.0",
     "redux": "4.2.0",
+    "styled-components": "^5.3.6",
     "yup": "^0.32.11"
   }
 }
