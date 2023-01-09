@@ -23,6 +23,7 @@ export const useFeesList = (total: number) => {
     },
   ];
   const [feesList, setFeesList] = useState(initialFee);
+
   useEffect(() => {
     setFeesList(
       feesList.map((fee) => {
@@ -38,7 +39,7 @@ export const useFeesList = (total: number) => {
         return fee;
       })
     );
-  }, []);
+  }, [total]);
 
   return {
     feesList,

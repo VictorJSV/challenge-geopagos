@@ -1,12 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { appSlice } from "./states/app";
+import { CheckoutState } from "@src/models";
+import { checkoutSlice } from "./states/checkout";
 
 export interface AppStore {
-  app: any;
+  checkout: CheckoutState;
 }
 
 export default configureStore<AppStore>({
   reducer: {
-    app: appSlice.reducer
-  }
+    checkout: checkoutSlice.reducer,
+  },
 });

@@ -1,10 +1,10 @@
 import { Box, Grid } from "@mui/material";
 import { IntlNumber } from "@src/components";
-import { IPricesList } from "../../interfaces";
+import { IPricesList } from "@src/models";
 import { GridResume, GridTotalLabel, GridTotalPrice } from "./styled";
 
 interface Props {
-  pricesList: IPricesList
+  pricesList: IPricesList;
 }
 
 export const Resume = ({ pricesList }: Props) => {

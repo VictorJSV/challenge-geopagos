@@ -15,11 +15,3 @@ export interface IFee {
   interest: number;
 }
 
-export interface IPricesList {
-  total: number;
-  items: {
-    name: string;
-    quantity: number;
-    price: number;
-  }[];
-}
