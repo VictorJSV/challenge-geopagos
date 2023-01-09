@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toolbar } from "./components";
 import { Box, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { IntlProvider } from "react-intl";
 
 const Checkout = lazy(() => import("./pages/Checkout/Checkout"));
 
@@ -23,20 +24,25 @@ export const App = () => {
     <>
       <CssBaseline />
       <Suspense fallback={<>Cargando ...</>}>
-        <ThemeProvider theme={theme}>
-          <Provider store={store}>
-            <Box sx={{ marginTop: 12 }}>
-              <Toolbar />
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<Navigate to="checkout" />}></Route>
-                  <Route path="*" element={<>NOT FOUND</>} />
-                  <Route path="checkout" element={<Checkout />} />
-                </Routes>
-              </BrowserRouter>
-            </Box>
-          </Provider>
-        </ThemeProvider>
+        <IntlProvider locale="en-US">
+          <ThemeProvider theme={theme}>
+            <Provider store={store}>
+              <Box sx={{ marginTop: 12 }}>
+                <Toolbar />
+                <BrowserRouter>
+                  <Routes>
+                    <Route
+                      path="/"
+                      element={<Navigate to="checkout" />}
+                    ></Route>
+                    <Route path="*" element={<>NOT FOUND</>} />
+                    <Route path="checkout" element={<Checkout />} />
+                  </Routes>
+                </BrowserRouter>
+              </Box>
+            </Provider>
+          </ThemeProvider>
+        </IntlProvider>
       </Suspense>
     </>
   );

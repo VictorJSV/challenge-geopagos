@@ -1,3 +1,3 @@
-export * from './Fee/Fee';
+export * from './Fees/Fees';
 export * from './Form/Form';
 export * from './Resume/Resume';

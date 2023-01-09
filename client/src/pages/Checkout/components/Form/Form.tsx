@@ -1,62 +1,213 @@
-import { Box, Grid, TextField } from "@mui/material";
+import { Box, Grid, TextField, Typography } from "@mui/material";
+import { forwardRef } from "react";
+import { useForm, useWatch, FormProvider } from "react-hook-form";
+import { ButtonGeneric } from "@src/shared/styled";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import MaskedInput, { MaskedInputProps } from "react-text-mask";
+import { AMERICANEXPRESS, CVC, DNI, EXPIRYDATE, OTHERCARDS } from "../../const";
+import { Validations } from "@src/shared/validations";
+import { Fees } from "../Fees/Fees";
+import { FormValues } from "../../interfaces";
 
-export const Form = () => {
+const TextMaskCustom = forwardRef<MaskedInputProps, any>((props, ref) => (
+  <MaskedInput {...props} />
+));
+
+const schema = yup.object({
+  cardNumber: yup
+    .string()
+    .required("Campo requerido")
+    .test("format", "Campo inválido", (value) =>
+      Validations.cardNumber(value)
+    ),
+  cardExpiration: yup
+    .string()
+    .required("Campo requerido")
+    .test("format", "Campo inválido", (value) =>
+      Validations.cardExpiration(value)
+    ),
+  cvc: yup.string().required("Campo requerido").min(3, "Campo inválido"),
+  cardName: yup.string().required("Campo requerido"),
+  dni: yup.string().required("Campo requerido").min(6, "Campo inválido"),
+  fees: yup.number(),
+  email: yup.string().required("Campo requerido").email("Campo inválido"),
+});
+
+interface Props {
+  onSubmit: (data: FormValues) => void
+  total: number
+}
+
+export const Form = ({ onSubmit, total }: Props) => {
+  const methods = useForm<FormValues>({
+    mode: "onChange",
+    resolver: yupResolver(schema),
+    defaultValues: {
+      fees: 1,
+    },
+  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = methods;
+  const valueCardNumber = useWatch({ control, name: "cardNumber" });
+
   return (
-    <Box sx={{ margin: "0 0 38px 0" }}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <TextField
-            variant="standard"
-            required
-            id="cardName"
-            label="Número de tarjeta"
-            fullWidth
-            autoComplete="cc-name"
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            variant="standard"
-            required
-            id="cardNumber"
-            label="MM/AA"
-            fullWidth
-            helperText="Fecha de expiración"
-            autoComplete="cc-exp"
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            variant="standard"
-            required
-            id="code"
-            label="Cód. de seguridad"
-            fullWidth
-            helperText="3 números al dorso de tarjeta"
-            autoComplete="cc-csc"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            variant="standard"
-            required
-            id="cvv"
-            label="Nombre de titular"
-            helperText="Como figura en la tarjeta"
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            variant="standard"
-            required
-            id="cvv"
-            label="DNI del titular"
-            helperText="Número de documento"
-            fullWidth
-          />
-        </Grid>
-      </Grid>
-    </Box>
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <Box sx={{ margin: "0 0 38px 0" }}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <TextField
+                variant="standard"
+                required
+                id="cardNumber"
+                label="Número de tarjeta"
+                fullWidth
+                autoComplete="cc-name"
+                {...register("cardNumber")}
+                InputProps={{
+                  inputComponent: TextMaskCustom,
+                  inputProps: {
+                    mask: ["37", "34"].includes(
+                      valueCardNumber?.substring(0, 2)
+                    )
+                      ? AMERICANEXPRESS
+                      : OTHERCARDS,
+                    guide: false,
+                  },
+                }}
+                error={Boolean(errors.cardNumber)}
+                helperText={
+                  Boolean(errors.cardNumber) &&
+                  (errors.cardNumber?.message as String)
+                }
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                variant="standard"
+                id="cardExpiration"
+                label="MM/AA"
+                fullWidth
+                autoComplete="cc-exp"
+                {...register("cardExpiration")}
+                InputProps={{
+                  inputComponent: TextMaskCustom,
+                  inputProps: {
+                    mask: EXPIRYDATE,
+                    guide: false,
+                  },
+                }}
+                error={Boolean(errors.cardExpiration)}
+                helperText={
+                  Boolean(errors.cardExpiration)
+                    ? (errors.cardExpiration?.message as String)
+                    : "Fecha de expiración"
+                }
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                variant="standard"
+                required
+                id="cvc"
+                label="Cód. de seguridad"
+                fullWidth
+                autoComplete="cc-csc"
+                {...register("cvc")}
+                InputProps={{
+                  inputComponent: TextMaskCustom,
+                  inputProps: {
+                    mask: CVC,
+                    guide: false,
+                  },
+                }}
+                error={Boolean(errors.cvc)}
+                helperText={
+                  Boolean(errors.cvc)
+                    ? (errors.cvc?.message as String)
+                    : "3 números al dorso de tarjeta"
+                }
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="standard"
+                required
+                id="cardName"
+                label="Nombre de titular"
+                fullWidth
+                autoComplete="cc-name"
+                {...register("cardName")}
+                error={Boolean(errors.cardName)}
+                helperText={
+                  Boolean(errors.cardName)
+                    ? (errors.cardName?.message as String)
+                    : "Como figura en la tarjeta"
+                }
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="standard"
+                required
+                id="dni"
+                label="DNI del titular"
+                fullWidth
+                {...register("dni")}
+                InputProps={{
+                  inputComponent: TextMaskCustom,
+                  inputProps: {
+                    mask: DNI,
+                    guide: false,
+                  },
+                }}
+                error={Boolean(errors.dni)}
+                helperText={
+                  Boolean(errors.dni)
+                    ? (errors.dni?.message as String)
+                    : "Número de documento"
+                }
+              />
+            </Grid>
+          </Grid>
+        </Box>
+        <Typography variant="h5" gutterBottom>
+          Cuotas
+        </Typography>
+        <Fees total={total} />
+        <Typography variant="h5" gutterBottom>
+          Datos personales
+        </Typography>
+        <TextField
+          variant="standard"
+          required
+          id="email"
+          label="Email"
+          fullWidth
+          {...register("email")}
+          error={Boolean(errors.email)}
+          helperText={
+            Boolean(errors.email)
+              ? (errors.email?.message as String)
+              : "A este email te enviaremos el recibo de compra"
+          }
+        />
+        <Box m="23px 0" textAlign="center">
+          <ButtonGeneric
+            type="submit"
+            variant="contained"
+            color="secondary"
+            disableElevation
+          >
+            Continuar
+          </ButtonGeneric>
+        </Box>
+      </form>
+    </FormProvider>
   );
 };
