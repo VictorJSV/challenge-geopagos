@@ -1,14 +1,27 @@
-import { Box, Grid, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  FormHelperText,
+  Grid,
+  Input,
+  InputAdornment,
+  InputLabel,
+  TextField,
+  Typography,
+} from "@mui/material";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import * as yup from "yup";
 import { forwardRef } from "react";
 import { useForm, useWatch, FormProvider } from "react-hook-form";
-import { ButtonGeneric } from "@src/shared/styled";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import MaskedInput, { MaskedInputProps } from "react-text-mask";
-import { AMERICANEXPRESS, CVC, DNI, EXPIRYDATE, OTHERCARDS } from "../../const";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { ButtonGeneric } from "@src/shared/styled";
 import { Validations } from "@src/shared/validations";
+import { AMERICANEXPRESS, CVC, DNI, EXPIRYDATE, OTHERCARDS } from "../../const";
 import { Fees } from "../Fees/Fees";
 import { FormValues } from "../../interfaces";
+import { useCardType } from "../../hooks";
+import IcVisa from "@src/assets/ic-visa.svg";
 
 const TextMaskCustom = forwardRef<MaskedInputProps, any>((props, ref) => (
   <MaskedInput {...props} />
@@ -52,6 +65,7 @@ export const Form = ({ onSubmit, total }: Props) => {
     control,
   } = methods;
   const valueCardNumber = useWatch({ control, name: "cardNumber" });
+  const cardType = useCardType(valueCardNumber);
 
   return (
     <FormProvider {...methods}>
@@ -59,31 +73,40 @@ export const Form = ({ onSubmit, total }: Props) => {
         <Box sx={{ margin: "0 0 38px 0" }}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <TextField
+              <FormControl
                 variant="standard"
-                required
-                id="cardNumber"
-                label="Número de tarjeta"
+                error={Boolean(errors.cardNumber)}
                 fullWidth
-                autoComplete="cc-name"
-                {...register("cardNumber")}
-                InputProps={{
-                  inputComponent: TextMaskCustom,
-                  inputProps: {
+              >
+                <InputLabel htmlFor="cardNumber">Número de tarjeta</InputLabel>
+                <Input
+                  required
+                  id="cardNumber"
+                  fullWidth
+                  autoComplete="cc-name"
+                  {...register("cardNumber")}
+                  inputComponent={TextMaskCustom}
+                  inputProps={{
                     mask: ["37", "34"].includes(
                       valueCardNumber?.substring(0, 2)
                     )
                       ? AMERICANEXPRESS
                       : OTHERCARDS,
                     guide: false,
-                  },
-                }}
-                error={Boolean(errors.cardNumber)}
-                helperText={
-                  Boolean(errors.cardNumber) &&
-                  (errors.cardNumber?.message as String)
-                }
-              />
+                  }}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      {cardType === "VISA" && (
+                        <IcVisa style={{ width: "40px" }} />
+                      )}
+                    </InputAdornment>
+                  }
+                />
+                <FormHelperText>
+                  {Boolean(errors.cardNumber) &&
+                    (errors.cardNumber?.message as String)}
+                </FormHelperText>
+              </FormControl>
             </Grid>
             <Grid item xs={6}>
               <TextField
@@ -109,28 +132,34 @@ export const Form = ({ onSubmit, total }: Props) => {
               />
             </Grid>
             <Grid item xs={6}>
-              <TextField
+              <FormControl
                 variant="standard"
-                required
-                id="cvc"
-                label="Cód. de seguridad"
+                error={Boolean(errors.cvc)}
                 fullWidth
-                autoComplete="cc-csc"
-                {...register("cvc")}
-                InputProps={{
-                  inputComponent: TextMaskCustom,
-                  inputProps: {
+              >
+                <InputLabel htmlFor="cvc">Cód. de seguridad</InputLabel>
+                <Input
+                  required
+                  id="cvc"
+                  autoComplete="cc-csc"
+                  {...register("cvc")}
+                  inputComponent={TextMaskCustom}
+                  inputProps={{
                     mask: CVC,
                     guide: false,
-                  },
-                }}
-                error={Boolean(errors.cvc)}
-                helperText={
-                  Boolean(errors.cvc)
+                  }}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <HelpOutlineIcon />
+                    </InputAdornment>
+                  }
+                />
+                <FormHelperText>
+                  {Boolean(errors.cvc)
                     ? (errors.cvc?.message as String)
-                    : "3 números al dorso de tarjeta"
-                }
-              />
+                    : "3 números al dorso de tarjeta"}
+                </FormHelperText>
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
               <TextField

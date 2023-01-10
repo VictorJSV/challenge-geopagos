@@ -1,11 +1,5 @@
+import { REGEX_PATTERN } from "@src/pages/Checkout/const";
 import dayjs from "dayjs";
-
-const regexPattern = {
-  MASTERCARD: /^5[1-5][0-9]{1,}|^2[2-7][0-9]{1,}$/,
-  VISA: /^4[0-9]{2,}$/,
-  AMERICAN_EXPRESS: /^3[47][0-9]{5,}$/,
-  DINERS_CLUB: /^3(?:0[0-5]|[68][0-9])[0-9]{4,}$/,
-};
 
 export const Validations = {
   cardNumber: (value: string | undefined) => {
@@ -13,8 +7,8 @@ export const Validations = {
       return false;
     }
     const currentValue = value.replace(/[^\d]/g, "");
-    for (const card in regexPattern) {
-      if (currentValue.match(regexPattern[card as keyof typeof regexPattern])) {
+    for (const card in REGEX_PATTERN) {
+      if (currentValue.match(REGEX_PATTERN[card as keyof typeof REGEX_PATTERN])) {
         if (value) {
           return /^[1-6]{1}[0-9]{14,15}$/i.test(currentValue.trim())
             ? true
