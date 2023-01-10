@@ -18,9 +18,7 @@ const schema = yup.object({
   cardNumber: yup
     .string()
     .required("Campo requerido")
-    .test("format", "Campo inválido", (value) =>
-      Validations.cardNumber(value)
-    ),
+    .test("format", "Campo inválido", (value) => Validations.cardNumber(value)),
   cardExpiration: yup
     .string()
     .required("Campo requerido")
@@ -35,8 +33,8 @@ const schema = yup.object({
 });
 
 interface Props {
-  onSubmit: (data: FormValues) => void
-  total: number
+  onSubmit: (data: FormValues) => void;
+  total: number;
 }
 
 export const Form = ({ onSubmit, total }: Props) => {

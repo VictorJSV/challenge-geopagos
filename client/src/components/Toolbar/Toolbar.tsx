@@ -11,9 +11,9 @@ import {
 import Logo from "@src/assets/logo.svg";
 import styled from "styled-components";
 
-const StyledLogo = styled(Logo)`
+const StyledLogo = styled(props => <Logo {...props} />)`
   width: 154px;
-`;
+`
 
 interface Props {
   color: PropTypes.Color;

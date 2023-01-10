@@ -4,10 +4,10 @@ import { ButtonGeneric } from "@src/shared/styled";
 import IcAlert from "@src/assets/ic-alert.svg";
 import styled from "styled-components";
 
-const IconAlert = styled(IcAlert)`
+const IconAlert = styled(props => <IcAlert {...props} />)`
   color: #D63E49;
   width: 54px;
-`;
+`
 
 const TransactionDeny = () => {
   const navigate = useNavigate();
