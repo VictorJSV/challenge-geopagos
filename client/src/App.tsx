@@ -9,7 +9,7 @@ import {
   Routes,
 } from "react-router-dom";
 import { Toolbar } from "./components";
-import { Box, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { Box, createTheme, CssBaseline, PropTypes, ThemeProvider } from "@mui/material";
 import { IntlProvider } from "react-intl";
 
 const Checkout = lazy(() => import("./pages/Checkout/Checkout"));
@@ -28,16 +28,9 @@ const theme = createTheme({
   },
 });
 
-const PrimaryLayout = () => (
+const Layout = ({ color }: { color: PropTypes.Color }) => (
   <>
-    <Toolbar color="primary" />
-    <Outlet />
-  </>
-);
-
-const SecondaryLayout = () => (
-  <>
-    <Toolbar color="inherit" />
+    <Toolbar color={color} />
     <Outlet />
   </>
 );
@@ -58,10 +51,10 @@ export const App = () => {
                       element={<Navigate to="checkout" />}
                     ></Route>
                     <Route path="*" element={<>NOT FOUND</>} />
-                    <Route element={<PrimaryLayout />}>
+                    <Route element={<Layout color="primary" />}>
                       <Route path="checkout" element={<Checkout />} />
                     </Route>
-                    <Route element={<SecondaryLayout />}>
+                    <Route element={<Layout color="inherit" />}>
                       <Route
                         path="transaction-deny"
                         element={<TransactionDeny />}
